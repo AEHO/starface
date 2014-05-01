@@ -1,3 +1,0 @@
-INDEX VERSION 1.126+/home/ciro/Development/Android/fb-hackathon2/.metadata/.plugins/org.eclipse.jdt.core
-574046832.index
-1293504066.index

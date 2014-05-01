@@ -4,5 +4,6 @@
     <string name="app_name">StarFAce</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+	<string name="m_calibrate">Calibrar</string>
+    
 </resources>
