@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "socket.io": "~0.9.16",
-    "express": "~4.1.1"
+    "express": "~4.1.1",
+    "fb": "~0.7.0"
   }
 }
