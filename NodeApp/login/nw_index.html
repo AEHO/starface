@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Login</title>
+</head>
+<body>
+
+<script type="text/javascript">
+
+/**
+* Gets the query string appended to the current url.
+* @return {String} The querySring or an empty one if not found.
+*/
+function getQueryString () {
+    return location.search
+        ? location.search.slice(1)
+        : '';
+}
+
+var qs = getQueryString();
+
+if (!qs) {
+    window.location.href = "https://www.facebook.com/dialog/oauth?client_id=307657009382643&redirect_uri=http://localhost:8000/login&scope=read_stream";
+} else {
+    if (qs.indexOf('code') !== -1) {
+        var code = qs.split('=')[1];
+    }
+}
+
+</script>
+</body>
+</html>

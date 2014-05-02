@@ -47,6 +47,37 @@ var exampleJson = {
   ]
 };
 
+$(function () {
+  $.ajaxSetup({ cache: true});
+  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+    FB.init({
+      appId: '307657009382643',
+    });
+
+    FB.Event.subscribe('auth.authResponseChange', function (response) {
+      if (response.status === 'connected') {
+        var uid = response.authResponse.useID;
+        var accessToken = response.authResponse.accessToken;
+
+        console.log(uid);
+
+        FB_OK = true;
+
+        var fba = new FBApi();
+        fba.getStream().then(function (response) {
+          console.log(response);
+        });
+
+      } else if (response.status === 'not_authorized') {
+        // not authorized :(
+      } else {
+        // an error ocurred
+      }
+    });
+
+  });
+});
+
 var Space = (function(){
   var module = {};
 
@@ -138,6 +169,7 @@ var Space = (function(){
       keysPressed[e.originalEvent.keyIdentifier] = false;
     });
 
+<<<<<<< HEAD
   };
 
   module.createTimeline = function(){
@@ -150,6 +182,10 @@ var Space = (function(){
     });
   };
  
+=======
+  }
+
+>>>>>>> e7763d0ed20ac740e1b0aa86009b6969e70fb661
   module.render = function () {
     requestAnimationFrame(module.render);
     if(keysPressed.Up){

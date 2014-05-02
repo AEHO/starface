@@ -84,6 +84,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		});
 	}
+	
+	
 
 	private void setSensors() {
 		senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -171,10 +173,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 				}
 			}
 
-			socket.emit("accelerometer", sensorData);
+			socket.emit("mobile-accelerometer", sensorData);
 			Log.v("dsauihdsa", sensorData.toString());
 		}
-	}
+	}	
 
 	protected void onPause() {
 		super.onPause();
