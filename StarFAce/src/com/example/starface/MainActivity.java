@@ -20,14 +20,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.Button;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
 	private SensorManager senSensorManager;
 	private Sensor senAccelerometer;
 	private long lastUpdate = 0;
-	private float last_x, last_y, last_z;
 	private SocketIO socket;
+	private Button btnTras, btnFrente;
+	private boolean BTN_TRAS = false, BTN_FRENTE = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +40,61 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		setContentView(R.layout.activity_main);
 
+		setUi();
+		setSensors();
+		setSocketIo();
+	}
+
+	private void setUi() {
+		btnFrente = (Button) findViewById(R.id.btnFrente);
+		btnFrente.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					BTN_FRENTE = true;
+					break;
+
+				case MotionEvent.ACTION_UP:
+					BTN_FRENTE = false;
+					break;
+				}
+
+				return true;
+			}
+		});
+
+		btnTras = (Button) findViewById(R.id.btnTras);
+		btnTras.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					BTN_TRAS = true;
+					break;
+
+				case MotionEvent.ACTION_UP:
+					BTN_TRAS = false;
+					break;
+				}
+
+				return true;
+			}
+		});
+	}
+
+	private void setSensors() {
 		senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		senAccelerometer = senSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		senSensorManager.registerListener(this, senAccelerometer,
 				SensorManager.SENSOR_DELAY_NORMAL);
 
+	}
+
+	private void setSocketIo() {
 		try {
 			socket = new SocketIO("http://192.168.1.13:3000");
 			socket.connect(new IOCallback() {
@@ -76,7 +130,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -93,33 +146,33 @@ public class MainActivity extends Activity implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		Sensor mySensor = event.sensor;
+		JSONObject sensorData = new JSONObject();
+		float x, y, z;
+		long curTime = System.currentTimeMillis();
 
-		if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			float x = event.values[0];
-			float y = event.values[1];
-			float z = event.values[2];
+		if ((curTime - lastUpdate) > 200) {
 
-			long curTime = System.currentTimeMillis();
+			lastUpdate = curTime;
 
-			if ((curTime - lastUpdate) > 500) {
-				long diffTime = (curTime - lastUpdate);
-				lastUpdate = curTime;
-
-				float speed = Math.abs(x + y + z - last_x - last_y - last_z)
-						/ diffTime * 10000;
+			if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+				x = event.values[0];
+				y = event.values[1];
+				z = event.values[2];
 
 				try {
-					socket.emit(
-							"my other event",
-							new JSONObject().put("posX", x).put("posY", y)
-									.put("posZ", z));
+					sensorData
+							.put("aceX", x)
+							.put("aceY", y)
+							.put("aceZ", z)
+							.put("btnTras", BTN_TRAS)
+							.put("btnFrente", BTN_FRENTE);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-
-				// Log.v("MainActivity", "x: " + Float.toString(x) + " -- y: "
-				// + Float.toString(y) + " -- z: " + Float.toString(z));
 			}
+
+			socket.emit("accelerometer", sensorData);
+			Log.v("dsauihdsa", sensorData.toString());
 		}
 	}
 

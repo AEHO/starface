@@ -2,7 +2,7 @@
   "name": "StarFace",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "socket.io": "~0.9.16",
-    "express": "~4.1.1"
+    "express": "~4.1.1",
+    "fb": "~0.7.0"
   }
 }
