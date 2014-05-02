@@ -1,4 +1,4 @@
-(function(){
+var Space = (function(){
   var scene;
   var camera;
   var renderer;
@@ -8,12 +8,15 @@
   var texture;
   var material;
   var boxes = [];
+  var nextRefreshZ = -10;
   var keysPressed = {
     Up: false,
     Down: false,
     Left: false,
     Right: false
   };
+
+  var module = {};
 
   var setContextContent = function(){
     context = canvas.getContext('2d');
@@ -30,16 +33,22 @@
     texture.needsUpdate = true;
     texture.anisotropy = maxAnisotropy;
     var material = new THREE.MeshBasicMaterial({ map: texture });
-    var geometry = new THREE.BoxGeometry(1,1,1);
+    var geometry = new THREE.BoxGeometry(3,3,0.1);
     var box = new THREE.Mesh(geometry, material);
-    box.position.x = camera.position.x + Math.random() * 10 - 5;
-    box.position.y = camera.position.y + Math.random() * 10 - 5;
-    box.position.z = camera.position.z + Math.random() * 10 - 5 - 3;
+    box.position.x = camera.position.x + Math.random() * 20 - 10;
+    box.position.y = camera.position.y + Math.random() * 20 - 10;
+    box.position.z = camera.position.z + Math.random() * 30 - 35;
     boxes.push(box);
     scene.add(box);
   }
 
-  var init = function(){
+  var loadMore = function(){
+    for(var i=0; i < 2; i++){
+      addBox(canvas);
+    }
+  }
+
+  module.init = function(){
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer();
@@ -53,11 +62,11 @@
     for(var i=0; i < 20; i++){
       addBox(canvas);
     }
+    camera.position.z = 3;
   }
 
-  var events = function(){
+  module.events = function(){
     $(window).keydown(function(e){
-      console.log(e.originalEvent);
       keysPressed[e.originalEvent.keyIdentifier] = true;
     });
 
@@ -66,15 +75,15 @@
     });
 
   }
-
-  init();
-  events();
-  
-  camera.position.z = 3;
-  var render = function () {
-    requestAnimationFrame(render);
+ 
+  module.render = function () {
+    requestAnimationFrame(module.render);
     if(keysPressed.Up){
       camera.position.z -= 0.1;
+      if(camera.position.z < nextRefreshZ){
+        nextRefreshZ -= 1;
+        loadMore();
+      }
     }
     if(keysPressed.Down){
       camera.position.z += 0.1;
@@ -88,6 +97,10 @@
     renderer.render(scene, camera);
   };
 
-  render();
+  return module;
 
 }());
+
+Space.init();
+Space.events();
+Space.render();
