@@ -7,8 +7,45 @@
 
 <button id="login-btn">Realizar Login</button>
 <a href="space.html">go to the space</a>
+<a>Adicionar <strong>COOL</strong>trole</a>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script><script type="text/javascript" src="js/index.js"></script>
+<h2 id="h2">Status</h2>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.6/socket.io.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script><script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+function getHash () {
+    return location.hash
+        ? location.hash.slice(1)
+        : '';
+}
+
+function activateSocketIO (ip) {
+    var socket = io.connect(ip);
+
+    handleSocketConnection(socket);
+}
+
+function handleSocketConnection (socket) {
+    socket.on('connect', function (data) {
+        console.log(data);
+        socket.emit('my other event', { my: 'data' });
+
+        $('#h2').text('conectado');
+    });
+
+    socket.on('accelerometer', function (data) {
+        console.log(data);
+    });
+}
+
+var hash = getHash();
+
+if (hash) {
+    activateSocketIO('http://' + hash + ':3000');
+}
+</script>
 </body>
 </html>

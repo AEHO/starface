@@ -12,7 +12,7 @@ var server = app.listen(3000, "0.0.0.0", function () {
 // ROUTES
 
 app.get('/', function (req, res) {
-  res.send('hellowolrd');
+  res.send('YOU SHOULDN\'T BE HERE!!!!!');
 });
 
 
@@ -39,10 +39,25 @@ function handleSocketsStuff () {
 
   io = require('socket.io').listen(server);
   io.sockets.on('connection', function (socket) {
-    socket.emit('news', {hello: 'world'});
 
-    socket.on('accelerometer', function (data) {
+    socket.on('mobile-accelerometer', function (data) {
+      socket.broadcast.emit('accelerometer', data);
       console.log(data);
     });
   });
 }
+
+// OBTEM O IP LOCAL DO CARA
+
+function getLocalIp () {
+    var ifaces = require('os').networkInterfaces();
+    var wlan0 = ifaces['wlan0'];
+
+    if (!wlan0) {
+        return;
+    }
+
+    return wlan0.length > 1 ? wlan0[0].address : '';
+};
+
+$('#ip').text(getLocalIp());
