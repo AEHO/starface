@@ -26,6 +26,11 @@ $(function () {
 
         FB_OK = true;
 
+        // var fba = new FBApi();
+        // fba.getStream().then(function (response) {
+        //   console.log(response);
+        // });
+
       } else if (response.status === 'not_authorized') {
 
         // not authorized :(
