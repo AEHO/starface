@@ -18,20 +18,20 @@ app.get('/', function (req, res) {
 
 // GETTING APPLICATION ACCESSTOKEN
 
-// FB.api('oauth/access_token', {
-//   client_id: 'app_id',
-//   client_secret: 'app_secret',
-//   grant_type: 'client_credentials'
-// }, function (res) {
-//   if(!res || res.error) {
-//     console.log(!res ? 'error occurred' : res.error);
-//     return;
-//   }
+FB.api('oauth/access_token', {
+  client_id: '307657009382643',
+  client_secret: '4fc2122807b6026e56037c5e05763656',
+  grant_type: 'client_credentials'
+}, function (res) {
+  if(!res || res.error) {
+    console.log(!res ? 'error occurred' : res.error);
+    return;
+  }
 
-//   var accessToken = res.access_token;
+  var accessToken = res.access_token;
 
-//   console.log(accessToken);
-// });
+  console.log(accessToken);
+});
 
 // SOCKETIO STUFF
 
