@@ -176,7 +176,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			socket.emit("mobile-accelerometer", sensorData);
 			Log.v("dsauihdsa", sensorData.toString());
 		}
-	}
+	}	
 
 	protected void onPause() {
 		super.onPause();
